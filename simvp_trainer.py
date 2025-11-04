@@ -69,7 +69,7 @@ class modelTrainer:
             total_samples += inputs.size(0)
         epoch_time = time.time() - epoch_time_start
         print(f'{total_samples/epoch_time:.2f} samples/s')
-        if hasattr(self.config, 'loss_weighting'):
+        if self.config.loss_weighting :
             print(f"Main weight: {loss_dict['main_weight'].item():.4f}, Pinn weight: {loss_dict['pinn_weight'].item():.4f}")
 
         return math.sqrt(total_loss / total_samples) if total_samples > 0 else 0
@@ -169,11 +169,11 @@ class modelTrainer:
 
 
             # 根据配置选择不同的损失加权策略
-            if hasattr(self.config, 'loss_weighting') and self.config.loss_weighting == 'uncertainty':
+            if self.config.loss_weighting  and self.config.loss_weighting == 'uncertainty':
                 # 不确定性加权方法
                 total_loss, loss_dict = self._apply_uncertainty_weighting(main_loss, pinn_loss, training)
 
-            elif hasattr(self.config, 'loss_weighting') and self.config.loss_weighting == 'normalization':
+            elif self.config.loss_weighting  and self.config.loss_weighting == 'normalization':
                 # 损失归一化方法
                 total_loss, loss_dict = self._apply_loss_normalization(main_loss, pinn_loss, training)
 
@@ -441,5 +441,6 @@ if __name__ == "__main__":
     print(f"test loss:{rmse} rmse)")
     with open(log_file, 'a') as f:
         f.write(f"test loss:,{rmse} rmse\n")
+
 
 
